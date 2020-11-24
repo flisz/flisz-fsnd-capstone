@@ -125,7 +125,6 @@ class SetupConfig:
 
     @show_func_name
     def __init_app_domain(self):
-        log.debug()
         domain = self.CONFIG.get('app', dict()).get('domain', 'http://127.0.0.1')
         log.debug(f'APP_DOMAIN: {domain}')
         return domain
