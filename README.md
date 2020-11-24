@@ -86,6 +86,18 @@ python manage.py db migrate
 python manage.py db upgrade
 ```
 
+## Heroku Deployment:
+1) Setup heroku cli and sign in
+2) Create heroku application
+```bash
+heroku create flis-capstone
+```
+3) Add postgresql addon to heroku 
+```bash
+heroku addons:create heroku-postgresql:hobby-dev --app flis-capstone
+```
+
+
 ## Testing deployment: 
 
 #TODO --> FILL THIS SECTION OUT!!!!!!!
