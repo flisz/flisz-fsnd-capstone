@@ -303,9 +303,7 @@ class SetupConfig:
             db_url = os.environ.get('DATABASE_URL')
             if not db_url:
                 raise ValueError("DATABASE_URL environement variable not found!!!")
-            log.info(f'Connecting to database: {db_url}')
-            database_path = f'postgresql://{userpass}{host}:{port}/{database_name}'
-            log.debug(f'database_path: {database_path}')
+            log.info(f'DATABASE_URL: {db_url}')
             return db_url
         else:
             db_info = self.DATABASE_INFO.get('database')
@@ -347,8 +345,8 @@ class SetupConfig:
             else:
                 userpass = ''
 
-            log.info(f'Connecting to database: {database_name}')
+            log.info(f'Connecting to local database: {database_name}')
             database_path = f'postgresql://{userpass}{host}:{port}/{database_name}'
-            log.debug(f'database_path: {database_path}')
+            log.debug(f'DATABASE_URL: {database_path}')
             return database_path
 
