@@ -96,6 +96,36 @@ heroku create flis-capstone
 ```bash
 heroku addons:create heroku-postgresql:hobby-dev --app flis-capstone
 ```
+4) create development branch to track github changes:
+```bash
+git checkout -b development
+```
+5) switch back to master branch and create setup.sh file 
+```bash
+git checkout master
+git touch setup.sh
+```
+5) remove 'setup.sh' from repository .gitignore file on master branch 
+6) Edit setup.sh file to export the following environment variables:
+```bash
+export AUDIENCE=
+export ALGORITHMS=
+export DATABASE_URL=
+export CLIENT_ID=
+export AUTH0_DOMAIN=
+export APP_DOMAIN=
+export JWT_SECRET=
+export SECRET_KEY=
+```
+7) Commit setup.sh to master branch
+8) push master branch to heroku: 
+```bash
+git push heroku master
+```
+9) Run migration scripts:
+```bash
+heroku run python manage.py db upgrade --app flis-capstone
+```
 
 
 ## Testing deployment: 
