@@ -102,7 +102,7 @@ class SetupConfig:
 
     @show_func_name
     def __init_project_name(self):
-        project_name = self.CONFIG.get('project_name')
+        project_name = self.CONFIG.get('project_name', 'project')
         if project_name:
             log.debug(f'PROJECT_NAME: {project_name}')
             return project_name
