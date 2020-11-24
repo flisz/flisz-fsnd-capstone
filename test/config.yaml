@@ -1,0 +1,17 @@
+version: 1
+project_name: project
+app:
+  mode: test
+  host: 127.0.0.1
+  domain: http://127.0.0.1
+  port: 5000
+  secret_key: secret-key-for-testing
+jwt:
+  secret: jwt-secret-for-testing
+auth0:
+  domain: flis.us.auth0.com
+  audience: mymed
+  client_id: testing-clientId
+  algorithms:
+    - HS256
+log_level: DEBUG

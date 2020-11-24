@@ -1,0 +1,15 @@
+version: 1
+project_name: project
+app:
+  mode: production
+  port: 8000
+  secret_key: change-to-a-really-secret-key
+jwt:
+  JWT_SECRET: change-to-a-nice-jwt-secret
+auth0:
+  domain: flis.us
+  audience: coffee
+  clientId: I12UnrxbhRGHcQG9wCyJwARE3YN81WLz
+  callbackURL: http://127.0.0.1
+  callbackPath: default
+log_level: DEBUG

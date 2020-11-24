@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>{% block title %}{% endblock %}</title>
+
+<!-- meta -->
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- /meta -->
+
+<!-- styles -->
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/layout.main.css') }}" />
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.responsive.css') }}" />
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.quickfix.css') }}" />
+<!-- /styles -->
+
+<!-- favicons -->
+<link rel="shortcut icon" href="{{ url_for('static', filename='ico/favicon.png') }}">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ url_for('static', filename='ico/apple-touch-icon-144-precomposed.png') }}">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ url_for('static', filename='ico/apple-touch-icon-114-precomposed.png') }}">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="{{ url_for('static', filename='ico/apple-touch-icon-72-precomposed.png') }}">
+<link rel="apple-touch-icon-precomposed" href="{{ url_for('static', filename='ico/apple-touch-icon-57-precomposed.png') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='ico/favicon.png') }}">
+<!-- /favicons -->
+
+<!-- scripts -->
+<script src="https://kit.fontawesome.com/af77674fe5.js"></script>
+<script src="{{ url_for('static', filename='js/libs/modernizr-2.8.2.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/libs/moment.min.js') }}"></script>
+<!-- /scripts -->
+</head>
+<body>
+  <!-- Wrap all page content here -->
+  <div id="wrap">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded">
+      <a class="navbar-brand" href="#">ActMoo</a>
+      {% if current_user.is_authenticated %}
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">  Menu  </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="#">Appointments</a>
+              <a class="dropdown-item" href="#">Measurements</a>
+              <a class="dropdown-item" href="#">Profile</a>
+            </div>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="#">User: {{ current_user.nickname }}</a>
+          </li>
+          <li class="nav-item">   </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+        </ul>
+      {% else %}
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Sign In</a>
+          </li>
+        </ul>
+      {% endif %}
+    </nav>
+    <!-- Begin page content -->
+    <main id="content" role="main" class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-block alert-info fade in">
+              <a class="close" data-dismiss="alert">&times;</a>
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <div id="footer">
+    <div class="container">
+      <p>Version: 0.1</p>
+      {% block footer %}{% endblock %}
+    </div>
+  </div>
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script>window.jQuery || document.write('<script type="text/javascript" src="{{ url_for('static', filename='js/libs/jquery-1.11.1.min.js') }}"><\/script>')</script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/libs/bootstrap-3.1.1.min.js') }}" defer></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/plugins.js') }}" defer></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <!--[if lt IE 9]><script src="{{ url_for('static', filename='js/libs/respond-1.4.2.min.js') }}"></script><![endif]-->
+  {% if not current_app.testing %}
+  <script type="text/javascript">
+    var csrf_token = "{{ csrf_token() }}";
+    {# The code below will attach a CSRF token to any AJAX request. #}
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+  </script>
+  {% endif %}
+  {% if current_user.is_active and current_user.is_authenticated %}
+  <script>
+    localStorage.setItem('token', {{ current_user.token }})
+  </script>
+  {% endif %}
+</body>
+</html>

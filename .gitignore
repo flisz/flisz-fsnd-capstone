@@ -1,0 +1,9 @@
+**/venv/**
+**/__pycache__/**
+**/.idea/**
+**/.env/**
+**/config.yaml
+**/db-info.yaml
+**/db_*/**
+**/logfile
+setup.sh

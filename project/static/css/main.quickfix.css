@@ -1,0 +1,17 @@
+
+/**
+ * @file
+ * Quickfix stylesheet file.
+ *
+ * Contains immediate fixes that should be revised later and added in the
+ * main.css.
+ */
+
+.bg-primary {
+    background-color: #53dc98;
+}
+
+.mr-auto .dropdown-menu {
+      left: auto !important;
+      right: 0px;
+    }

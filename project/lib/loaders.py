@@ -1,0 +1,69 @@
+"""
+Many thanks to Bob Waycott and Miguel Grinberg for excellent code examples and advice:
+https://bobwaycott.com/blog/how-i-use-flask/organizing-flask-models-with-automatic-discovery/
+https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
+"""
+
+from os import walk
+from os.path import abspath, basename, dirname, join
+from sys import modules
+from importlib import import_module
+from inspect import isclass
+from flask_sqlalchemy import Model
+
+
+# main project path & module name
+
+PROJ_DIR = abspath(join(dirname(abspath(__file__)), '..'))
+APP_MODULE = basename(PROJ_DIR)
+
+
+def get_modules(module):
+    """
+    Returns all .py modules in given `module` directory that are not `__init__`.
+    Usage:
+      get_modules('models')
+
+    Yields dot-notated module paths for discovery/import.
+    Example:
+      /project/models/foo.py > models.foo
+    """
+    file_dir = abspath(join(PROJ_DIR, module))
+    for root, dirnames, files in walk(file_dir):
+        mod_path = '{}{}'.format(APP_MODULE, root.split(PROJ_DIR)[1]).replace('/', '.').replace('\\', '.')
+        for filename in files:
+            if filename.endswith('.py') and not filename.startswith('__init__'):
+                yield '.'.join([mod_path, filename[0:-3]])
+
+
+def dynamic_loader(module, compare):
+    """
+    Iterates over all .py files in `module` directory, finding all classes that
+    match `compare` function.
+    Other classes/objects in the module directory will be ignored.
+
+    Returns unique list of matches found.
+    """
+    items = []
+    for mod in get_modules(module):
+        module = import_module(mod)
+        if hasattr(module, '__all__'):
+            objs = [getattr(module, obj) for obj in module.__all__]
+            items += [o for o in objs if compare(o) and o not in items]
+    return items
+
+
+def get_models():
+    """Dynamic model finder."""
+    return dynamic_loader('models', is_model)
+
+
+def is_model(item):
+    """Determines if `item` is a `Model` subclass."""
+    return isclass(item) and issubclass(item, Model)  # and not item.__ignore__()
+
+
+def load_models():
+    """Load application models for management script & app availability."""
+    for model in get_models():
+        setattr(modules[__name__], model.__name__, model)

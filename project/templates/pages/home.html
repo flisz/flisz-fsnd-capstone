@@ -1,0 +1,27 @@
+{% extends 'layouts/main.html' %}
+{% block title %}ActMoo{% endblock %}
+{% block content %}
+<div class="row">
+	<div class="col-sm-6">
+		<h1>ActMoo</h1>
+		<p class="lead">Connecting Actors and Movies, yo. </p>
+		<div id="jwt" class="hidden">
+			<h1>JWT:</h1>
+			<p id="token"></p>
+		</div>
+
+		<script type="text/javascript">
+			window.addEventListener('load', function()  {
+				var token = localStorage.getItem('token');
+				var eleJwtDiv = document.getElementById("jwt");
+				if (token !== null) {
+					var eleToken = document.getElementById("token");
+					eleJwtDiv.classList.remove("hidden");
+				} else if (!jwt.hasClass('hidden')) {
+					jwt.addClass('hidden');
+				}
+			}
+		</script>
+	</div>
+</div>
+{% endblock %}
