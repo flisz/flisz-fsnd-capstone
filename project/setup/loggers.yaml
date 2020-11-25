@@ -11,7 +11,7 @@ handlers:
     stream: ext://sys.stdout
 loggers:
   Setup:
-    level: INFO
+    level: DEBUG
     handlers: [console]
     propagate: no
   WebApp:

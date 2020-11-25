@@ -4,10 +4,18 @@ import sys
 import platform
 import yaml
 from pathlib import Path
-
+from functools import wraps
 from project.setup.loggers import LOGGERS
 
 log = LOGGERS.Setup
+
+
+def show_func_name(func):
+    @wraps(func)
+    def tmp(*args, **kwargs):
+        log.debug(func.__name__)
+        return func(*args, **kwargs)
+    return tmp
 
 
 class SetupConfig:
@@ -40,6 +48,7 @@ class SetupConfig:
         return self.__properties['ROOT']
 
     @staticmethod
+    @show_func_name
     def __init_root():
         levels_up = -2
         env_file_path = os.path.dirname(os.path.realpath(__file__)).replace('\\', '/')
@@ -52,6 +61,7 @@ class SetupConfig:
     def CONFIG(self):
         return self.__properties['CONFIG']
 
+    @show_func_name
     def __init_config(self, config_yaml=None):
         if not config_yaml:
             config_yaml = os.path.join(self.ROOT, 'config.yaml')
@@ -71,6 +81,7 @@ class SetupConfig:
     def DATABASE_INFO(self):
         return self.__properties['DATABASE_INFO']
 
+    @show_func_name
     def __init_db_info(self):
         database_info_yaml = os.path.join(self.ROOT, 'db-info.yaml')
         data = dict()
@@ -89,8 +100,9 @@ class SetupConfig:
     def PROJECT_NAME(self):
         return self.__properties['PROJECT_NAME']
 
+    @show_func_name
     def __init_project_name(self):
-        project_name = self.CONFIG.get('project_name')
+        project_name = self.CONFIG.get('project_name', 'project')
         if project_name:
             log.debug(f'PROJECT_NAME: {project_name}')
             return project_name
@@ -101,6 +113,7 @@ class SetupConfig:
     def APP_MODE(self):
         return self.__properties['APP_MODE']
 
+    @show_func_name
     def __init_mode(self):
         mode = self.CONFIG.get('app', dict()).get('mode', 'production')
         log.debug(f'APP_MODE: {mode}')
@@ -110,6 +123,7 @@ class SetupConfig:
     def APP_DOMAIN(self):
         return self.__properties['APP_DOMAIN']
 
+    @show_func_name
     def __init_app_domain(self):
         domain = self.CONFIG.get('app', dict()).get('domain', 'http://127.0.0.1')
         log.debug(f'APP_DOMAIN: {domain}')
@@ -119,6 +133,7 @@ class SetupConfig:
     def APP_HOST(self):
         return self.__properties['APP_HOST']
 
+    @show_func_name
     def __init_app_host(self):
         host = self.CONFIG.get('app', dict()).get('host', 'http://0.0.0.0')
         log.debug(f'APP_HOST: {host}')
@@ -128,6 +143,7 @@ class SetupConfig:
     def APP_PORT(self):
         return self.__properties['APP_PORT']
 
+    @show_func_name
     def __init_app_port(self):
         port = self.CONFIG.get('app', dict()).get('port')
         log.debug(f'APP_PORT: {port}')
@@ -137,6 +153,7 @@ class SetupConfig:
     def AUTH0_DOMAIN(self):
         return self.__properties['AUTH0_DOMAIN']
 
+    @show_func_name
     def __init_auth0_domain(self):
         domain = os.environ.get('AUTH0_DOMAIN')
         if not domain:
@@ -148,6 +165,7 @@ class SetupConfig:
     def AUTH0_ALGORITHMS(self):
         return self.__properties['AUTH0_ALGORITHMS']
 
+    @show_func_name
     def __init_auth0_algorithms(self):
         algorithms = os.environ.get('ALGORITHMS')
         if algorithms and not isinstance(algorithms, list):
@@ -161,6 +179,7 @@ class SetupConfig:
     def AUTH0_API_AUDIENCE(self):
         return self.__properties['AUTH0_API_AUDIENCE']
 
+    @show_func_name
     def __init_auth0_api_audience(self):
         audience = os.environ.get('API_AUDIENCE')
         if not audience:
@@ -172,6 +191,7 @@ class SetupConfig:
     def AUTH0_CLIENT_ID(self):
         return self.__properties['AUTH0_CLIENT_ID']
 
+    @show_func_name
     def __init_auth0_client_id(self):
         client_id = os.environ.get('CLIENT_ID')
         if not client_id:
@@ -183,6 +203,7 @@ class SetupConfig:
     def AUTH0_CALLBACK_URL(self):
         return self.__properties['AUTH0_CALLBACK_URL']
 
+    @show_func_name
     def __init_auth0_callback_url(self):
         if not self.APP_PORT:
             uri = self.APP_DOMAIN
@@ -199,6 +220,7 @@ class SetupConfig:
     def JWT_SECRET(self):
         return self.__properties['JWT_SECRET']
 
+    @show_func_name
     def __init_jwt_secret(self):
         jwt_secret = os.environ.get('JWT_SECRET')
         if not jwt_secret:
@@ -210,6 +232,7 @@ class SetupConfig:
     def USER_HOME(self):
         return self.__properties['USER_HOME']
 
+    @show_func_name
     def __init_user_home(self):
         home = str(Path.home())
         log.debug(f'USER_HOME: {home}')
@@ -219,6 +242,7 @@ class SetupConfig:
     def HOSTNAME(self):
         return self.__properties['HOSTNAME']
 
+    @show_func_name
     def __init_host_name(self):
         hostname = platform.uname()[1].upper()
         log.debug(f'HOSTNAME: {hostname}')
@@ -228,6 +252,7 @@ class SetupConfig:
     def TEMPLATES(self):
         return self.__properties['TEMPLATES']
 
+    @show_func_name
     def __init_templates(self):
         templates = os.path.join(self.ROOT, self.PROJECT_NAME, 'templates')
         if os.path.isdir(templates):
@@ -239,6 +264,7 @@ class SetupConfig:
     def STATIC_FILES(self):
         return self.__properties['STATIC_FILES']
 
+    @show_func_name
     def __init_static_files(self):
         static_files = os.path.join(self.ROOT, self.PROJECT_NAME, 'static')
         if os.path.isdir(static_files):
@@ -250,6 +276,7 @@ class SetupConfig:
     def SECRET_KEY(self):
         return self.__properties['SECRET_KEY']
 
+    @show_func_name
     def __init_secret_key(self):
         secret_key = os.environ.get('SECRET_KEY')
         if not secret_key:
@@ -264,6 +291,7 @@ class SetupConfig:
     def DATABASE_URL(self):
         return self.__properties['DATABASE_URL']
 
+    @show_func_name
     def __init_db_uri(self):
         """
         Creates a uri for the database
@@ -275,9 +303,7 @@ class SetupConfig:
             db_url = os.environ.get('DATABASE_URL')
             if not db_url:
                 raise ValueError("DATABASE_URL environement variable not found!!!")
-            log.info(f'Connecting to database: {db_url}')
-            database_path = f'postgresql://{userpass}{host}:{port}/{database_name}'
-            log.debug(f'database_path: {database_path}')
+            log.info(f'DATABASE_URL: {db_url}')
             return db_url
         else:
             db_info = self.DATABASE_INFO.get('database')
@@ -319,8 +345,8 @@ class SetupConfig:
             else:
                 userpass = ''
 
-            log.info(f'Connecting to database: {database_name}')
+            log.info(f'Connecting to local database: {database_name}')
             database_path = f'postgresql://{userpass}{host}:{port}/{database_name}'
-            log.debug(f'database_path: {database_path}')
+            log.debug(f'DATABASE_URL: {database_path}')
             return database_path
 
