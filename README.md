@@ -1,7 +1,11 @@
-# Full Stack Capstone Project "Mymed"
+# Full Stack Capstone Project "ActMoo"
 
 ## Application Purpose:
-* Create a web service to keep track of medical information
+* Finish the Capstone project for Udacity FSND
+* Learn about Heroku Deployment
+
+## Special Thanks:
+* Many thanks to Miguel Grinberg and Bob Waycott for wonderful guidance on structuring flask applications
 
 ### Main Files: Project Structure
 
